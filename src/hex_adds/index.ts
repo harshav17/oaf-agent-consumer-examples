@@ -2,26 +2,17 @@ import { callOaf } from "oaf";
 import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, ChatCompletionFunctions } from "openai";
 import * as funcs from "./funcs";
 import { Writable } from "node:stream";
-import dedent from "dedent";
+import { finString, zero_cot } from "./prompts";
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
 });
 
 async function main() {
-    const finString = "[finished]";
     let messages: ChatCompletionRequestMessage[] = [
         {
             role: ChatCompletionRequestMessageRoleEnum.System,
-            content: dedent`
-                You are addition assistant. You will use function provided to you to add given numbers.
-                To add a hexadecimal value to a decimal value, you must first convert the hexadecimal value to a decimal value.
-                
-                You Must Always:
-                1. Think step by step
-                2. Use the functions provided to you to do additions.
-                3. Once you think you have given the answer, you should respond to all future prompts with ${finString}.
-            `,
+            content: zero_cot,
         },
         {
             role: ChatCompletionRequestMessageRoleEnum.User,
