@@ -1,7 +1,7 @@
-import { callOaf } from "oaf";
+import { OafOptions, callOaf } from "oaf-agent";
 import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, ChatCompletionFunctions } from "openai";
 import { Writable } from "node:stream";
-import { finString, easy_4x4_cot, x66_solve, easy_6x6_cot, easy_6x6_cot_v2, easy_6x6_tot_prompt, easy_6x6_cot_v3 } from "./prompts";
+import { finString, x66_solve, easy_6x6_cot_v3 } from "./prompts";
 import * as funcs from "./funcs";
 
 const configuration = new Configuration({
@@ -30,7 +30,12 @@ async function main() {
         console.error(err);
     });
 
-    await callOaf(messages, stream, funcs, functionsForModel, configuration, finString);
+    const oafOptions: OafOptions = {
+        finString,
+        funcs,
+        funcDescs: functionsForModel,
+    }
+    await callOaf(messages, stream, configuration, oafOptions);
 }
 
 const functionsForModel: ChatCompletionFunctions[] = [

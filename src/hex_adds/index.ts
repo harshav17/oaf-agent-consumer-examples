@@ -1,4 +1,4 @@
-import { callOaf } from "oaf";
+import { OafOptions, callOaf } from "oaf-agent";
 import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, ChatCompletionFunctions } from "openai";
 import * as funcs from "./funcs";
 import { Writable } from "node:stream";
@@ -31,7 +31,12 @@ async function main() {
     });
 
     const funs: Record<string, (...args: any[]) => any> = funcs;
-    await callOaf(messages, stream, funs, functionsForModel, configuration, finString);
+    const oafOptions: OafOptions = {
+        finString,
+        funcs: funs,
+        funcDescs: functionsForModel,
+    }
+    await callOaf(messages, stream, configuration, oafOptions);
 }
 
 const functionsForModel: ChatCompletionFunctions[] = [
