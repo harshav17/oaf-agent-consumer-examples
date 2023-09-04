@@ -30,4 +30,7 @@ describe('My math library', () => {
   it('whats wrong with this' , () => {
     expect(validateSolution({solution: "2,3,*,1,4,5|*,*,6,*,1,2|*,5,1,*,*,3|3,*,4,*,*,6|*,3,5,*,*,1|*,*,2,*,3,4"})).to.equal("duplicate digits in column 1");
   });
+  it('9x9 solved by code interpretor', () => {
+    expect(validateSolution({solution: "3,4,2,9,8,1,5,6,7|5,7,6,2,3,4,8,1,9|8,9,1,7,5,6,2,4,3|9,2,5,4,6,3,7,8,1|4,6,8,1,2,7,3,9,5|1,3,7,8,9,5,6,2,4|6,5,4,3,1,2,9,7,8|7,8,3,6,4,9,1,5,2|2,1,9,5,7,8,4,3"})).to.equal("");
+  })
 });

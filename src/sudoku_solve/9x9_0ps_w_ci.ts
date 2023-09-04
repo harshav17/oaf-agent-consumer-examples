@@ -2,7 +2,7 @@ import { OafOptions, callOaf } from "oaf-agent";
 import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, ChatCompletionFunctions } from "openai";
 import { Writable } from "node:stream";
 import dedent from "dedent";
-import { functionsForModel, validateSolution } from "./funcs";
+import { executeCode, functionsForModel, validateSolution } from "./funcs";
 
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
@@ -16,9 +16,6 @@ export const easy_6x6_cot_v3 = dedent `
     The | character separates rows.
     The , character separates cells in a row. Characters in the same position belong to the same column.
     There must be no duplicate digits in any row, column or 3x3 subgrid.
-
-    You MUST:
-    1. Always call validateSolution to confirm your solution.
 
     Let's first understand the problem and devise a plan to solve the problem. Then, let's carry out the plan and solve the problem step by step.
 
@@ -49,6 +46,7 @@ async function main() {
 
     const funcs: Record<string, (...args: any[]) => any> = {
         validateSolution: validateSolution,
+        executeCode: executeCode,
     };
 
     const oafOptions: OafOptions = {

@@ -1,4 +1,6 @@
 import { ChatCompletionFunctions } from "openai";
+const ivm = require('isolated-vm');
+const isolate = new ivm.Isolate({ memoryLimit: 128 });
 
 type sudokuProps = {
     solution: string;
@@ -55,4 +57,39 @@ export const functionsForModel: ChatCompletionFunctions[] = [
             required: ["solution"],
         },
     },
+    {
+        name: "executeCode",
+        description: "Executes the javscript code in the parameter. Returns the result of the code. Don't add new lines to code or input object.",
+        parameters: {
+            type: "object",
+            properties: {
+                code: {
+                    type: "string",
+                    description: "The code to execute. For example, 3+4",
+                },
+            },
+            required: ["code"],
+        },
+    }
 ];
+
+type executeCodeProps = {
+    code: string;
+}
+export async function executeCode(props: executeCodeProps) {
+    const { code } = props;
+    console.log("executing code: " + code);
+
+    try {
+        const context = await isolate.createContext();
+        const jail = context.global;
+        jail.setSync('global', jail.derefInto());
+    
+        const script = await isolate.compileScript(code);
+        const result = await script.run(context);
+        return result;
+    } catch (e) {
+        console.log("Error: " + e);
+        return e;
+    }
+}
