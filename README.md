@@ -12,3 +12,11 @@ npx ts-node src/hex_adds/index.ts
 ```
 DEBUG=oaf:* npx ts-node src/hex_adds/index.ts
 ```
+
+## Examples
+* [hex_adds](./src/hex_adds)
+* [sudoku_solve](./src/sudoku_solve)
+* [story_book](./src/story_book)
+
+
+
