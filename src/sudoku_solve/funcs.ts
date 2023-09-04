@@ -1,3 +1,5 @@
+import { ChatCompletionFunctions } from "openai";
+
 type sudokuProps = {
     solution: string;
 }
@@ -37,3 +39,20 @@ export function validateSolution(props: sudokuProps) {
     }
     return "";
 }
+
+export const functionsForModel: ChatCompletionFunctions[] = [
+    {
+        name: "validateSolution",
+        description: "Validates whether a solution is correct. Solution should be in the pattern 3,*,*,2|1,*,3,*|*,1,*,3|4,*,*,1. You can use this method to validate intermedite solutions as well. Return empty if correcr OR description of what went wrong.",
+        parameters: {
+            type: "object",
+            properties: {
+                solution: {
+                    type: "string",
+                    description: "The solution to validate. For example, 3,*,*,2|1,*,3,*|*,1,*,3|4,*,*,1",
+                },
+            },
+            required: ["solution"],
+        },
+    },
+];
