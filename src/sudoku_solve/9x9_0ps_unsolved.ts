@@ -9,15 +9,20 @@ const configuration = new Configuration({
 });
 
 const finString = "[finished]";
-export const x66_solve = "2,*,*,6,*,5|*,*,6,*,1,2|*,5,1,*,*,3|3,*,4,*,*,6|*,3,5,*,*,1|*,*,2,*,3,4";
+export const x66_solve = "*,*,2,*,*,*,5,*,7|*,7,6,2,3,*,*,*,9|8,*,1,*,*,*,*,4,*|*,*,*,*,6,*,*,*,*|4,*,*,1,*,7,*,*,*|*,3,*,*,9,5,*,*,4|6,*,*,*,*,*,*,*,*|*,*,*,*,4,9,1,5,*|2,*,*,5,*,8,4,3,*";
 export const easy_6x6_cot_v3 = dedent `
-    This is a 6x6 Sudoku puzzle.
+    This is a 9x9 Sudoku puzzle.
     The * represents a cell to be filled.
     The | character separates rows.
     The , character separates cells in a row. Characters in the same position belong to the same column.
-    There must be no duplicate digits in any row, column.
+    There must be no duplicate digits in any row, column or 3x3 subgrid.
 
-    Let's first understand the problem and devise a plan to solve the problem. Then, let's carry out the plan and solve the problem step by step. Display the step by step plan before proceeding.
+    You MUST:
+    1. Always call validateSolution to confirm your solution.
+
+    Let's first understand the problem and devise a plan to solve the problem. Then, let's carry out the plan and solve the problem step by step.
+
+    Once you think have solved the puzzle, you will respond with ${finString}.
 `;
 
 async function main() {
