@@ -1,7 +1,7 @@
 ## 4x4 
 for GPT-4, solving 4x4 so is a piece of cake. I used COT prompting, you probably don't even need that.
 ```
-DEBUG=oaf:* npx ts-node src/soduke/index.ts
+DEBUG=oaf:* npx ts-node src/sudoku_solve/4x4_0cot.ts
 ```
 
 ## 9x9
