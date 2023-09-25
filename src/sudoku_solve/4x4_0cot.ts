@@ -54,6 +54,7 @@ async function main() {
         finString,
         funcs,
         funcDescs: functionsForModel,
+        shouldRecurse: true,
     }
     await callOaf(messages, stream, configuration, oafOptions);
 }

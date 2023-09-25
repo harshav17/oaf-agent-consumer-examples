@@ -47,6 +47,7 @@ async function main() {
 
     const oafOptions: OafOptions = {
         finString,
+        shouldRecurse: true,
     }
     await callOaf(messages, stream, configuration, oafOptions);
     

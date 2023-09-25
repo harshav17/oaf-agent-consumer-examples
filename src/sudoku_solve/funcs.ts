@@ -39,6 +39,20 @@ export function validateSolution(props: sudokuProps) {
             return "duplicate digits in column " + i;
         }
     }
+
+    // check that there are no duplicate digits in any subgrid
+    let gridSize = Math.sqrt(cells.length);
+    for (let i = 0; i < cells.length; i += gridSize) {
+        for (let j = 0; j < cells[i].length; j += gridSize) {
+            let subgrid = cells.slice(i, i + gridSize).map(row => row.slice(j, j + gridSize));
+            let digits = [].concat(...subgrid).filter(cell => cell != "*");
+            if (digits.length != new Set(digits).size) {
+                console.log("duplicate digits in " + gridSize + "x" + gridSize + " subgrid starting at row " + i + ", column " + j);
+                return "duplicate digits in " + gridSize + "x" + gridSize + " subgrid starting at row " + i + ", column " + j;
+            }
+        }
+    }
+    
     return "";
 }
 
