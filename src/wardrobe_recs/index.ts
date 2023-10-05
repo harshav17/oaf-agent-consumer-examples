@@ -3,12 +3,13 @@ dotenv.config();
 
 import dedent from "dedent";
 import { OafOptions, callOaf } from "oaf-agent";
-import { ChatCompletionFunctions, ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration } from "openai";
 import { Writable } from "stream";
+import { ChatCompletionCreateParams, ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import { ClientOptions } from "openai";
 
-const configuration = new Configuration({
+const clientOptions: ClientOptions = {
     apiKey: process.env.OPENAI_API_KEY,
-});
+};
 
 type weatherProps = {
     lat: number;
@@ -28,7 +29,7 @@ export async function getCurrentWeather(props: weatherProps) {
     });
 }
 
-const functionsForModel: ChatCompletionFunctions[] = [
+const functionsForModel: ChatCompletionCreateParams.Function[] = [
     {
         name: 'getCurrentWeather',
         description: 'Gives the current weather at a location',
@@ -56,13 +57,13 @@ const zero_cot = dedent`
 `;
 
 async function main() {
-    let messages: ChatCompletionRequestMessage[] = [
+    let messages: ChatCompletionMessageParam[] = [
         {
-            role: ChatCompletionRequestMessageRoleEnum.System,
+            role: "system",
             content: zero_cot,
         },
         {
-            role: ChatCompletionRequestMessageRoleEnum.User,
+            role: "user",
             content: "San Francisco",
         }
     ];
@@ -86,7 +87,7 @@ async function main() {
         funcs: funs,
         funcDescs: functionsForModel,
     }
-    await callOaf(messages, stream, configuration, oafOptions);
+    await callOaf(messages, stream, clientOptions, oafOptions);
 }
 
 main();

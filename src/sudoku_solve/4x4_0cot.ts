@@ -1,12 +1,13 @@
 import { OafOptions, callOaf } from "oaf-agent";
-import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, ChatCompletionFunctions } from "openai";
+import { ChatCompletionCreateParams, ChatCompletionMessageParam } from "openai/resources/chat/completions";
 import { Writable } from "node:stream";
 import dedent from "dedent";
 import { functionsForModel, validateSolution } from "./funcs";
+import { ClientOptions } from "openai";
 
-const configuration = new Configuration({
+const clientOptions: ClientOptions = {
     apiKey: process.env.OPENAI_API_KEY,
-});
+};
 
 const finString = "[finished]";
 const x44_solve = "3,*,*,2|1,*,3,*|*,1,*,3|4,*,*,1";
@@ -25,13 +26,13 @@ const easy_4x4_cot = dedent `
 `;
 
 async function main() {
-    let messages: ChatCompletionRequestMessage[] = [
+    let messages: ChatCompletionMessageParam[] = [
         {
-            role: ChatCompletionRequestMessageRoleEnum.System,
+            role: "system",
             content: easy_4x4_cot,
         },
         {
-            role: ChatCompletionRequestMessageRoleEnum.User,
+            role: "user",
             content: x44_solve,
         }
     ];
@@ -56,7 +57,7 @@ async function main() {
         funcDescs: functionsForModel,
         shouldRecurse: true,
     }
-    await callOaf(messages, stream, configuration, oafOptions);
+    await callOaf(messages, stream, clientOptions, oafOptions);
 }
 
 main();

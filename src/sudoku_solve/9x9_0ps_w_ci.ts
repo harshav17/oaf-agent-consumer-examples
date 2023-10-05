@@ -1,12 +1,13 @@
 import { OafOptions, callOaf } from "oaf-agent";
-import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, ChatCompletionFunctions } from "openai";
 import { Writable } from "node:stream";
 import dedent from "dedent";
 import { executeCode, functionsForModel, validateSolution } from "./funcs";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import { ClientOptions } from "openai";
 
-const configuration = new Configuration({
+const clientOptions: ClientOptions = {
     apiKey: process.env.OPENAI_API_KEY,
-});
+};
 
 const finString = "[finished]";
 export const x66_solve = "*,*,2,*,*,*,5,*,7|*,7,6,2,3,*,*,*,9|8,*,1,*,*,*,*,4,*|*,*,*,*,6,*,*,*,*|4,*,*,1,*,7,*,*,*|*,3,*,*,9,5,*,*,4|6,*,*,*,*,*,*,*,*|*,*,*,*,4,9,1,5,*|2,*,*,5,*,8,4,3,*";
@@ -23,13 +24,13 @@ export const easy_6x6_cot_v3 = dedent `
 `;
 
 async function main() {
-    let messages: ChatCompletionRequestMessage[] = [
+    let messages: ChatCompletionMessageParam[] = [
         {
-            role: ChatCompletionRequestMessageRoleEnum.System,
+            role: "system",
             content: easy_6x6_cot_v3,
         },
         {
-            role: ChatCompletionRequestMessageRoleEnum.User,
+            role: "user",
             content: x66_solve,
         },
     ];
@@ -55,7 +56,7 @@ async function main() {
         funcDescs: functionsForModel,
         shouldRecurse: true,
     }
-    await callOaf(messages, stream, configuration, oafOptions);
+    await callOaf(messages, stream, clientOptions, oafOptions);
 }
 
 main();

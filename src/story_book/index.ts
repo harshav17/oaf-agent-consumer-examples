@@ -1,6 +1,7 @@
 import dedent from "dedent";
 import { OafOptions, callOaf } from "oaf-agent";
-import { Configuration, ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, ChatCompletionFunctions } from "openai";
+import { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import { ClientOptions } from "openai";
 import { Writable } from "stream";
 
 export const finString = "[finished]";
@@ -19,18 +20,18 @@ export const zero_cot = dedent`
     - Respond to all future prompts with ${finString}, once you think you are finished with the story.
 `;
 
-const configuration = new Configuration({
+const clientOptions: ClientOptions = {
     apiKey: process.env.OPENAI_API_KEY,
-});
+};
 
 async function main() {
-    let messages: ChatCompletionRequestMessage[] = [
+    let messages: ChatCompletionMessageParam[] = [
         {
-            role: ChatCompletionRequestMessageRoleEnum.System,
+            role: "system",
             content: zero_cot,
         },
         {
-            role: ChatCompletionRequestMessageRoleEnum.User,
+            role: "user",
             content: "",
         }
     ];
@@ -49,7 +50,7 @@ async function main() {
         finString,
         shouldRecurse: true,
     }
-    await callOaf(messages, stream, configuration, oafOptions);
+    await callOaf(messages, stream, clientOptions, oafOptions);
     
     console.log("Finished");
 }

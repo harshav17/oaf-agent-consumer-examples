@@ -1,11 +1,12 @@
 import { OafOptions, callOaf } from "oaf-agent";
-import { ChatCompletionRequestMessage, ChatCompletionRequestMessageRoleEnum, Configuration, ChatCompletionFunctions } from "openai";
 import { Writable } from "node:stream";
 import dedent from "dedent";
+import { ChatCompletionCreateParams, ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import { ClientOptions } from "openai";
 
-const configuration = new Configuration({
+const clientOptions: ClientOptions = {
     apiKey: process.env.OPENAI_API_KEY,
-});
+};
 
 type decimalProps = {
     value1: number;
@@ -35,7 +36,7 @@ function addHexadecimalValues(props: hexadecimalProps) {
     return value1 + " + " + value2 + " = " + result + " (hex)";
 }
 
-const functionsForModel: ChatCompletionFunctions[] = [
+const functionsForModel: ChatCompletionCreateParams.Function[] = [
     {
         name: "addDecimalValues",
         description: "Add two decimal values",
@@ -87,13 +88,13 @@ const zero_cot = dedent`
 `;
 
 async function main() {
-    let messages: ChatCompletionRequestMessage[] = [
+    let messages: ChatCompletionMessageParam[] = [
         {
-            role: ChatCompletionRequestMessageRoleEnum.System,
+            role: "system",
             content: zero_cot,
         },
         {
-            role: ChatCompletionRequestMessageRoleEnum.User,
+            role: "user",
             content: "What is 27 + 35 + 42 + A3 + B4 + C5?",
         }
     ];
@@ -119,7 +120,7 @@ async function main() {
         funcDescs: functionsForModel,
         shouldRecurse: true,
     }
-    await callOaf(messages, stream, configuration, oafOptions);
+    await callOaf(messages, stream, clientOptions, oafOptions);
 }
 
 main();
