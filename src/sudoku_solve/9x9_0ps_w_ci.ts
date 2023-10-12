@@ -56,7 +56,23 @@ async function main() {
         funcDescs: functionsForModel,
         shouldRecurse: true,
     }
-    await callOaf(messages, stream, clientOptions, oafOptions);
+    const res = await callOaf(messages, clientOptions, oafOptions);
+
+    // read from res
+    const readableStream = res.body;
+    if (!readableStream) {
+        throw new Error(
+            "ReadableStream not yet supported in this browser.",
+        );
+    }
+    const reader = readableStream.getReader();
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+            break;
+        }
+        process.stdout.write(value);
+    } 
 }
 
 main();

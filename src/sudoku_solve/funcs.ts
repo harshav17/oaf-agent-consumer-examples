@@ -1,4 +1,4 @@
-import { ChatCompletionFunctions } from "openai";
+import { ChatCompletionCreateParams, ChatCompletionMessageParam } from "openai/resources/chat/completions";
 const ivm = require('isolated-vm');
 const isolate = new ivm.Isolate({ memoryLimit: 128 });
 
@@ -56,7 +56,7 @@ export function validateSolution(props: sudokuProps) {
     return "";
 }
 
-export const functionsForModel: ChatCompletionFunctions[] = [
+export const functionsForModel: ChatCompletionCreateParams.Function[] = [
     {
         name: "validateSolution",
         description: "Validates whether a solution is correct. Solution should be in the pattern 3,*,*,2|1,*,3,*|*,1,*,3|4,*,*,1. You can use this method to validate intermedite solutions as well. Return empty if correcr OR description of what went wrong.",

@@ -98,16 +98,6 @@ async function main() {
             content: "What is 27 + 35 + 42 + A3 + B4 + C5?",
         }
     ];
-    const stream = new Writable({
-        write(chunk, encoding, callback) {
-            // print without newline
-            process.stdout.write(chunk.toString());
-            callback();
-        },
-    });
-    stream.on('error', (err) => {
-        console.error(err);
-    });
 
     const funs: Record<string, (...args: any[]) => any> = {
         addDecimalValues: addDecimalValues,
@@ -120,7 +110,22 @@ async function main() {
         funcDescs: functionsForModel,
         shouldRecurse: true,
     }
-    await callOaf(messages, stream, clientOptions, oafOptions);
+    const res = await callOaf(messages, clientOptions, oafOptions);
+    // read from res
+    const readableStream = res.body;
+    if (!readableStream) {
+        throw new Error(
+            "ReadableStream not yet supported in this browser.",
+        );
+    }
+    const reader = readableStream.getReader();
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+            break;
+        }
+        process.stdout.write(value);
+    }   
 }
 
 main();

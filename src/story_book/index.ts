@@ -35,24 +35,28 @@ async function main() {
             content: "",
         }
     ];
-    const stream = new Writable({
-        write(chunk, encoding, callback) {
-            // print without newline
-            process.stdout.write(chunk.toString());
-            callback();
-        },
-    });
-    stream.on('error', (err) => {
-        console.error(err);
-    });
 
     const oafOptions: OafOptions = {
         finString,
         shouldRecurse: true,
     }
-    await callOaf(messages, stream, clientOptions, oafOptions);
-    
-    console.log("Finished");
+    const res = await callOaf(messages, clientOptions, oafOptions);
+
+    // read from res
+    const readableStream = res.body;
+    if (!readableStream) {
+        throw new Error(
+            "ReadableStream not yet supported in this browser.",
+        );
+    }
+    const reader = readableStream.getReader();
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+            break;
+        }
+        process.stdout.write(value);
+    } 
 }
 
 main();

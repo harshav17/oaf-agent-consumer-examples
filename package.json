@@ -10,12 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/gapi": "^0.0.45",
     "chromadb": "^1.5.11",
     "dedent": "^1.5.1",
     "dotenv": "^16.3.1",
     "isolated-vm": "^4.6.0",
     "llamaindex": "^0.0.29",
-    "oaf-agent": "^0.0.9",
+    "oaf-agent": "^0.0.10",
     "openai": "^4.11.1"
   },
   "devDependencies": {
@@ -26,8 +27,5 @@
     "mocha": "^10.2.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
-  },
-  "volta": {
-    "node": "18.6.0"
   }
 }
